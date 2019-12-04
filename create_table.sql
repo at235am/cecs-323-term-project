@@ -240,16 +240,8 @@ CREATE TABLE WorkShift
     shiftType   ENUM('Morning', 'Evening')     	NOT NULL,
     dateOfShift DATE            				NOT NULL,
 	busyness   	ENUM('High', 'Medium', 'Low')   NOT NULL,
-    mID			INT     						NOT NULL,
-    hcID		INT     						NOT NULL,
-    sID			INT     						NOT NULL,
-    mdID		INT     						NOT NULL,
     CONSTRAINT  PK_WorkShift 	PRIMARY KEY (shiftID),
-    CONSTRAINT 	UC_Employee		UNIQUE (shiftType, dateOfShift),
-    CONSTRAINT  FK_Manager_WorkShift		FOREIGN KEY (mID) 	REFERENCES Manager (empID),
-    CONSTRAINT  FK_HeadChef_WorkShift		FOREIGN KEY (hcID) 	REFERENCES HeadChef (empID),
-    CONSTRAINT  FK_SousChef_WorkShift		FOREIGN KEY (sID) 	REFERENCES SousChef (empID),
-    CONSTRAINT  FK_MaitreD_WorkShift		FOREIGN KEY (mdID) 	REFERENCES MaitreD (empID)
+    CONSTRAINT 	UC_Employee		UNIQUE (shiftType, dateOfShift)
 );
 
 CREATE TABLE WorkSchedule
