@@ -304,7 +304,6 @@ CREATE TABLE Mentorship
 	CONSTRAINT		FK_Expertise_Mentorship 	FOREIGN KEY (mentorID, menuItemName) 	REFERENCES Expertise (empID, menuItemName)
 );
 ---------------
-
 CREATE TABLE Customer
 (
    customerID       INT 			NOT NULL AUTO_INCREMENT, 
@@ -356,6 +355,8 @@ CREATE TABLE ContactInfo
 create table Menu (
     menuType 					ENUM('Evening','Lunch','Sunday Brunch Buffet','Children') NOT NULL,
     priceModifierPercentage 	DOUBLE 		NOT NULL DEFAULT 0, -- in percentages (ex. 20 means 20% off)
+    startTime 					TIME 		NOT NULL,
+    endTime 					TIME 		NOT NULL,
     dateCreated 				date 		NOT NULL,
     CONSTRAINT PK_Menu primary key(menuType)
 );
@@ -394,21 +395,21 @@ create table ChowMein (
     menuItemName 		varchar(50),
     typeOfNoodles 		varchar(50),
     CONSTRAINT	PK_ChowMein					primary key (menuItemName),
-    CONSTRAINT	FK_MeatEntree_ChowMein		foreign key (menuItemName) references MeatEntree(menuItemName)
+    CONSTRAINT	FK_MenuItem_ChowMein		foreign key (menuItemName) references MenuItem(menuItemName)
 );
 
 create table EggFooYoung(
     menuItemName 	varchar(50),
     omeletStyle 	varchar(50),
     CONSTRAINT	PK_EggFooYoung				primary key (menuItemName),
-    CONSTRAINT	FK_MeatEntree_EggFooYoung	foreign key (menuItemName) references MeatEntree(menuItemName)
+    CONSTRAINT	FK_MenuItem_EggFooYoung	foreign key (menuItemName) references MenuItem(menuItemName)
 );
 
 create table ChopSuey(
     menuItemName 	varchar(50),
     typeOfRice 		varchar(50),
     CONSTRAINT	PK_ChopSuey					primary key (menuItemName),
-    CONSTRAINT	FK_MeatEntree_ChopSuey		foreign key (menuItemName) references MeatEntree(menuItemName)
+    CONSTRAINT	FK_MenuItem_ChopSuey		foreign key (menuItemName) references MenuItem(menuItemName)
 );
 
 -----------------------------------------------------------------------------------------------
@@ -490,12 +491,71 @@ create table Cash
 
 DELIMITER $$
 
+CREATE TRIGGER INSERT_OrderDetails_ordering_from_valid_menu
+BEFORE INSERT ON
+OrderDetails FOR EACH ROW
+BEGIN
+	DECLARE msg VARCHAR(255);
+	
+	DECLARE v_orderdate DATE;
+	DECLARE v_ordertime TIME;
+    DECLARE v_menustarttime TIME;
+    DECLARE v_menuendtime TIME;
+    
+	SELECT orderDate
+    INTO v_orderdate
+    FROM Orders
+    WHERE orderID = new.orderID;
+    
+	SELECT orderTime
+    INTO v_ordertime
+    FROM Orders
+    WHERE orderID = new.orderID;
+    
+    SELECT startTime
+    INTO v_menustarttime
+    FROM Menu
+    WHERE menuType = new.menuType;
+    
+	SELECT endTime
+    INTO v_menuendtime
+    FROM Menu
+    WHERE menuType = new.menuType;
+    
+    -- if the orderTime is out of the menuType's range
+	IF v_ordertime < v_menustarttime OR v_ordertime > v_menuendtime THEN 
+		SET msg = concat('Trouble @ [', cast(new.menuType as char), ', ',  cast(new.menuItemName as char), ', ', cast(new.orderID as char),']: orderTime is out of the menuType\'s range');
+        SIGNAL SQLSTATE '45000' SET message_text = msg;
+    END IF;
+    
+    IF new.menuType = 'Sunday Brunch Buffet' THEN
+		-- if the day of the week of the orderDate is Sunday (1)
+		IF NOT dayofweek(v_orderDate) = 1 THEN
+			SET msg = concat('Trouble @ [', cast(new.menuType as char), ', ',  cast(new.menuItemName as char), ', ', cast(new.orderID as char), ']: the orderDate is not a Sunday');
+			SIGNAL SQLSTATE '45000' SET message_text = msg;
+        END IF;
+    END IF;
+    
+END $$
+
 CREATE TRIGGER INSERT_MenuMenuItem_price
 BEFORE INSERT ON
 MenuMenuItem FOR EACH ROW
 BEGIN
+	DECLARE msg VARCHAR(255);
+	DECLARE v_spiciness VARCHAR(50);
 	DECLARE v_pricemodifierpercentage DOUBLE;
 	DECLARE v_baseprice DECIMAL(6,2);
+    
+	SELECT spiciness
+    INTO v_spiciness
+    FROM MenuItem
+    WHERE menuItemName = new.menuItemName;
+    
+    IF new.menuType = 'Children' AND NOT v_spiciness = 'Mild' THEN
+		SET msg = concat('This item is too spicy for the Children Menu: ', cast(new.menuItemName as char));
+        SIGNAL SQLSTATE '45000' SET message_text = msg;
+    END IF;
     
     SELECT priceModifierPercentage
     INTO v_pricemodifierpercentage
@@ -508,7 +568,6 @@ BEGIN
     WHERE menuItemName = new.menuItemName;
 	
 	SET new.price = v_baseprice * ((100 - v_pricemodifierpercentage)/100);
-    
 END $$
 
 
