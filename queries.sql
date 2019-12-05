@@ -62,7 +62,7 @@ FROM Expertise NATURAL JOIN Employee
 GROUP BY menuItemName;
     
 -- e. Find the three menu items most often ordered from the Children’s menu and order them from most frequently ordered to least frequently ordered.
-SELECT menuType, menuItemName, sum(quantity) AS `# of times ordered`
+SELECT menuType, menuItemName, sum(quantity) AS '# of times ordered'
 FROM OrderDetails
 WHERE menuType = 'Children'
 GROUP BY menuItemName
@@ -73,30 +73,86 @@ LIMIT 3;
 
 
 -- g. List the customers, sorted by the amount of Miming’s Money that they have, from largest to smallest.
-
+SELECT cFirstName, cLastName, cDOB, currentBalance AS 'Mimings Credit Balance'
+FROM MimingsMoney NATURAL JOIN Customer
+ORDER BY currentBalance DESC;
 
 -- h. List the customers and the total that they have spent at Miming’s ever, in descending order by the amount that they have spent.
-
+SELECT cFirstName, cLastName, cDOB, SUM(total) AS 'Lifetime Total Spent'
+FROM Customer NATURAL JOIN Orders
+GROUP BY customerID
+ORDER BY SUM(total) DESC;
 
 -- i. Report on the customers at Miming’s by the number of times that they come in by month and order the report from most frequent to least frequent.
-
+SELECT monthname(orderDate) AS 'Month' , count(month(orderDate)) AS 'Visits'
+FROM EatInOrder NATURAL JOIN Orders
+GROUP BY month(orderDate)
+ORDER BY count(month(orderDate)) DESC;
 
 -- j. List the three customers who have spent the most at Miming’s over the past year.  Order by the amount that they spent, from largest to smallest.
-
+SELECT A.customerID, A.cFirstName, A.cLastName, SUM(A.total) AS `Total Spent Last Year`
+FROM
+(
+	SELECT *
+	FROM Customer NATURAL JOIN Orders
+	WHERE orderDate >= DATE_SUB(NOW(), INTERVAL 1 YEAR)
+) AS A
+GROUP BY A.customerID
+ORDER BY SUM(A.total) DESC
+LIMIT 3;
 
 -- k. List the five menu items that have generated the most revenue for Miming’s over the past year.
-
+SELECT menuType, menuItemName, sum(price * quantity)
+FROM MenuMenuItem NATURAL JOIN OrderDetails NATURAL JOIN
+(SELECT *
+FROM Orders
+WHERE orderDate >= DATE_SUB(NOW(), INTERVAL 1 YEAR)) AS X
+GROUP BY menuType, menuItemName;
 
 -- l. Find the sous chef who is mentoring the most other sous chef.  List the menu items that the sous chef is passing along to the other sous chefs.
 
+SELECT empID, firstName, lastName, count(empID) AS '# of students taught', group_concat(DISTINCT menuItemName) AS 'Menu Items taught'
+FROM Employee INNER JOIN Mentorship
+ON empID = mentorID
+WHERE empID IN
+(
+	SELECT mentorID
+	FROM Mentorship
+	GROUP BY mentorID
+	HAVING count(studentID) =
+	(
+		SELECT max(X.numOfStudentsMentored)
+		FROM
+		(
+			SELECT mentorID, count(studentID) AS numOfStudentsMentored
+			FROM Mentorship
+			GROUP BY mentorID
+		) AS X
+	)
+)
+GROUP BY empID;
 
 -- m. Find the three menu items that have the fewest sous chefs skilled in those menu items.
+SELECT menuItemName, count(menuItemName) AS '# of Expert SousChefs'
+FROM Expertise
+GROUP BY menuItemName
+ORDER BY count(menuItemName)
+LIMIT 3;
 
+SELECT *
+FROM Expertise;
 
 -- n. List all of the customers who eat at Miming’s on their own as well as ordering for their corporation.
-
+SELECT DISTINCT customerID, P.cFirstName, P.cLastName, P.email, P.snailMailAddress, P.phone
+FROM
+	(SELECT * FROM PrivateCustomer NATURAL JOIN Customer NATURAL JOIN ContactInfo) AS P
+	INNER JOIN
+	(SELECT * FROM CorporateCustomer NATURAL JOIN Customer NATURAL JOIN ContactInfo) AS C
+USING (customerID);
 
 -- o. List the contents and prices of each of the menus.
-
+SELECT menuType, menuItemName, price
+FROM MenuMenuItem
+ORDER BY menuType, menuItemName;
 
 -- p. Three additional queries that demonstrate the five additional business rules.  Feel free to create additional views to support these queries if you so desire.

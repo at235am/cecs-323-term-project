@@ -236,7 +236,6 @@ CREATE TABLE Tip
     CONSTRAINT		FK_Waiter_Tip 	FOREIGN KEY (empID) 		REFERENCES Waiter (empID)
 );
 
-
 CREATE TABLE WorkShift
 (
     shiftID   	INT     						NOT NULL AUTO_INCREMENT,

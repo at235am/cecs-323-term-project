@@ -369,7 +369,7 @@ INSERT INTO MoraleBonus(empID, month, year) VALUES
 INSERT INTO Menu(menuType, priceModifierPercentage, startTime, endTime, dateCreated) VALUES
 ('Lunch', 					10, '10:00:00', '16:59:59', '2018-03-29'), -- 10am to 4:59pm
 ('Evening', 				0, 	'17:00:00', '23:00:00', '2018-11-23'), -- 5pm to 11pm
-('Sunday Brunch Buffet', 	50, '10:00:00', '23:00:00', '2018-08-09'), -- only sundays 10am to 11pm
+('Sunday Brunch Buffet', 	100, '10:00:00', '23:00:00', '2018-08-09'), -- only sundays 10am to 11pm
 ('Children', 				20, '10:00:00', '23:00:00', '2018-02-18'); -- all day everyday so 10am to 11pm
 
 INSERT INTO MenuItem(menuItemName, spiciness, basePrice) VALUES
@@ -457,7 +457,6 @@ INSERT INTO Mentorship(studentID, mentorID, menuItemName, startDate, endDate) VA
 (6,			13, 	'Tacos',									'2000-06-19','2000-12-04');
 
 
-
 INSERT INTO Customer (cFirstName, cLastName,cDOB) VALUES 
 ('Amber','Reinger','1974-01-28'),
 ('Annabell','Fay','1988-03-11'),
@@ -479,27 +478,26 @@ INSERT INTO PrivateCustomer (customerID) VALUES
 (5),
 (6),
 (7),
-(8),
-(9),
-(10);
+(8);
 
 INSERT INTO CorporateCustomer (customerID, orgName, deptName, officeAddress) VALUES 
 (3, 'Burger King', 'Sales', '17 Fawn St.North Haven, CT 06473'),
 (6, 'Yahoo!', 'Engineering', '659 Jockey Hollow Street Attleboro, MA 02703'),
 (9, 'eBay' , 'Marketing', '166 South Hill Lane Billerica, MA 01821'),
-(5, 'Adobe', 'Art', '723 Warren Street Huntington Station, NY 11746');
+(5, 'Adobe', 'Art', '723 Warren Street Huntington Station, NY 11746'),
+(10, 'Nox', 'Engineering', '5654 Gibli Street Huntington Station, NY 11746');
 
-INSERT INTO MimingsMoney (customerID, creditEarned, creditSpent, currentBalance) VALUES 
-(1, 23, 12.43, 10),
-(2, 10, 2.50, 7.50),
-(3, 5, 1.00, 4.00),
-(4, 11, 10.10, 0.90),
-(5, 7, 6.00, 1.00),
-(6, 9, 5.00, 4.00),
-(7, 10, 4.25, 5.75),
-(8, 21, 15.76, 5.24),
-(9, 13, 2.56, 10.44),
-(10, 6, 3.00, 3.00);
+INSERT INTO MimingsMoney (customerID) VALUES 
+(1),
+(2),
+(3),
+(4),
+(5),
+(6),
+(7),
+(8),
+(9),
+(10);
 
 INSERT INTO ContactInfo (customerID, email, snailMailAddress, phone) VALUES 
 (1, 'getmehere@gmail.com', '21 Constitution Ave. Elmont, NY 11003', '202-555-0130'),
@@ -529,7 +527,9 @@ INSERT INTO Orders(customerID, orderDate, orderTime) VALUES
 (7, '2017-09-26', '22:52:49'),
 (8, '2018-07-29', '19:04:43'), -- SUNDAY
 (9, '2017-11-02', '18:21:27'),
-(10,'2019-05-02', '17:25:42');
+(10,'2019-05-02', '17:25:42'),
+(9,'2018-01-23','17:22:00'),
+(9,'2018-01-24','21:13:00');
 
 
 INSERT INTO Payment(orderID, paymentType, paymentDate) VALUES
@@ -551,12 +551,12 @@ Insert into Cash(paymentID) values
 (6);
  
 Insert into PhoneOrder(orderID) VALUES
-(2),
-(4);
+(9),
+(10);
  
 INSERT into WebOrder(orderID) values
-(3),
-(5);
+(11),
+(12);
 
 INSERT INTO OrderDetails(menuType, menuItemName, orderID, quantity) VALUES
 ('Evening', 'Salmon Curry', 6, 1),
@@ -16259,15 +16259,27 @@ INSERT INTO WorkSchedule(empID, shiftID) VALUES
 INSERT INTO SeatingTable(shiftID, tableNum, empID, maxOccupancy) VALUE
 (1, 3, 49, 6),
 (2, 4, 41, 4),
-(2, 3, 41, 2);
+(3, 1, 41, 2),
+(4, 2, 43, 2),
+(5, 3, 42, 2),
+(6, 4, 46, 2);
 
 Insert into EatInOrder(orderID, numGuest, stID) values
 (1, 4, 1),
-(6, 2, 2);
+(2, 4, 2),
+(3, 4, 3),
+(4, 4, 4),
+(5, 4, 5),
+(6, 2, 6);
 
-SELECT * FROM SeatingTable;
-SELECT * FROM WorkShift;
-SELECT * FROM WorkSchedule;
-SELECT * FROM Expertise;
-SELECT * FROM Mentorship;
-SELECT * FROM TriggerDebug;
+SELECT * FROM Orders;
+
+SELECT * FROM EatInOrder;
+
+
+-- SELECT * FROM SeatingTable;
+-- SELECT * FROM WorkShift;
+-- SELECT * FROM WorkSchedule;
+-- SELECT * FROM Expertise;
+-- SELECT * FROM Mentorship;
+-- SELECT * FROM TriggerDebug;
