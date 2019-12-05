@@ -61,6 +61,9 @@ DROP TABLE IF EXISTS Employee;
 ------------------------------------------------
 -- use this table if you need to debug a trigger
 -- just INSERT INTO TriggerDebug(id, tableName, ...) VALUES (variableYouWannaPrint, ...) inside the trigger
+-- ex:
+-- INSERT INTO TriggerDebug(tableName, rowOrPk, message) VALUES 
+--    ('', cast(new.orderID as char), '');
 CREATE TABLE TriggerDebug
 (
 	id INT NOT NULL AUTO_INCREMENT,
@@ -604,6 +607,39 @@ BEGIN
 		set new.happyHourDiscount = true;
 	end if;
 end $$
+
+CREATE TRIGGER UPDATE_Orders_causes_MimingsMoney_Orders
+AFTER UPDATE
+ON Orders FOR EACH ROW
+BEGIN
+	DECLARE v_totalspentacrossallorders DOUBLE;
+    DECLARE v_creditEarned INT;
+	DECLARE v_creditSpent DOUBLE;
+    DECLARE v_currentBalance DOUBLE;
+    
+	SELECT sum(total)
+    INTO v_totalspentacrossallorders
+    FROM Orders NATURAL JOIN Customer
+    WHERE customerID = new.customerID;
+    
+    SELECT creditSpent
+    INTO v_creditSpent
+    FROM MimingsMoney
+    WHERE customerID = new.customerID;
+    
+    SET v_creditEarned = v_totalspentacrossallorders * 0.10;
+    SET v_currentBalance = v_creditEarned - v_creditSpent;
+    
+    
+	UPDATE MimingsMoney
+	SET creditEarned = v_creditEarned 
+	WHERE customerID = new.customerID;
+    
+	UPDATE MimingsMoney
+	SET currentBalance = v_currentBalance
+	WHERE customerID = new.customerID;
+
+END;
 
 CREATE TRIGGER INSERT_Mentorship_triggers_INSERT_Expertise
 AFTER INSERT
