@@ -456,21 +456,6 @@ INSERT INTO Mentorship(studentID, mentorID, menuItemName, startDate, endDate) VA
 (12,		9, 		'Sweet & Sour Chicken',						'1975-04-04','2013-02-04'),
 (6,			13, 	'Tacos',									'2000-06-19','2000-12-04');
 
-INSERT INTO WorkShift(shiftType, dateOfShift, busyness, mID, hcID, sID, mdID) VALUES
-('Morning', '1998-06-25', 'High', 	1, 3, 6, 28),
-('Evening', '1998-06-25', 'Medium',	2, 4, 7, 28),
-('Morning', '1998-06-26', 'High', 	1, 5, 7, 30),
-('Evening', '1998-06-26', 'Low', 	2, 3, 8, 28),
-('Morning', '1998-06-27', 'High', 	1, 4, 8, 30),
-('Evening', '1998-06-27', 'Low', 	2, 4, 8, 30);
-
-INSERT INTO WorkSchedule(shiftID, empID) VALUES
-(1, 39), (1, 5), (1, 6), (2, 40), (2, 41), (3, 7), (4, 28), (4, 39), (5, 29), (6, 27), (6, 31);
-
-INSERT INTO SeatingTable(shiftID, tableNum, empID, maxOccupancy) VALUE
-(1, 3, 39, 6),
-(2, 4, 40, 4),
-(2, 3, 41, 2);
 
 
 INSERT INTO Customer (cFirstName, cLastName,cDOB) VALUES 
@@ -572,10 +557,6 @@ Insert into PhoneOrder(orderID) VALUES
 INSERT into WebOrder(orderID) values
 (3),
 (5);
- 
-Insert into EatInOrder(orderID, numGuest, stID) values
-(1,4, 1),
-(6,2, 2);
 
 INSERT INTO OrderDetails(menuType, menuItemName, orderID, quantity) VALUES
 ('Evening', 'Salmon Curry', 6, 1),
@@ -16274,11 +16255,19 @@ INSERT INTO WorkSchedule(empID, shiftID) VALUES
 (50, 726),
 (42, 726);
 
+-- empID can be waiting IDs only: (39-50)
+INSERT INTO SeatingTable(shiftID, tableNum, empID, maxOccupancy) VALUE
+(1, 3, 49, 6),
+(2, 4, 41, 4),
+(2, 3, 41, 2);
 
+Insert into EatInOrder(orderID, numGuest, stID) values
+(1, 4, 1),
+(6, 2, 2);
 
 SELECT * FROM SeatingTable;
 SELECT * FROM WorkShift;
 SELECT * FROM WorkSchedule;
 SELECT * FROM Expertise;
 SELECT * FROM Mentorship;
-SELECT * FROM TriggerDebug;INSERT INTO WorkShift(shiftType, dateOfShift, busyness, mID, hcID, sID, mdID) VALUES ('Morning', '1998-06-25', 'High',  1, 3, 6, 28), ('Evening', '1998-06-25', 'Medium', 2, 4, 7, 28), ('Morning', '1998-06-26', 'High',  1, 5, 7, 30), ('Evening', '1998-06-26', 'Low',  2, 3, 8, 28), ('Morning', '1998-06-27', 'High',  1, 4, 8, 30), ('Evening', '1998-06-27', 'Low',  2, 4, 8, 30)
+SELECT * FROM TriggerDebug;
