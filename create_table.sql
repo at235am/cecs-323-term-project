@@ -414,8 +414,8 @@ CREATE TABLE Orders
 	orderID 			INT 			NOT NULL auto_increment,
 	orderDate 	 		DATE 			NOT NULL,
 	orderTime 			TIME 			NOT NULL,
-	happyHourDiscount 	boolean 		DEFAULT false,
-	total 			DECIMAL(8,2) 	DEFAULT 0,
+	happyHourDiscount 	boolean 		DEFAULT false, -- derived attributes
+	total 			DECIMAL(8,2) 	DEFAULT 0, -- derived attributes
 	CONSTRAINT PK_Orders 			PRIMARY KEY (orderID),
 	CONSTRAINT FK_Customer_Orders 	foreign key (customerID) REFERENCES Customer(customerID)
 );
@@ -572,31 +572,45 @@ OrderDetails FOR EACH ROW
 BEGIN
 	DECLARE newtotal DECIMAL(6,2);
     DECLARE v_happyhourdiscount BOOLEAN;
-	
-    -- AFTER the new insert associating a MenuMenuItem with an Order
-    -- find the total for that specific Order based on the price of each MenuMenuItem
-    SELECT SUM(price)
-    INTO newtotal
-    FROM MenuMenuItem NATURAL JOIN OrderDetails
-    WHERE orderID = new.orderID;
-	
-    -- find if the specific order has the happyhourdiscount
-    SELECT happyHourDiscount
-    INTO v_happyhourdiscount
+	DECLARE v_orderDate DATE;
+    
+    SELECT orderDate
+    INTO v_orderDate
     FROM Orders
     WHERE orderID = new.orderID;
     
-    -- apply happy hour discount if available
-    IF v_happyhourdiscount = true THEN
-        SET newtotal = 0.5 * newtotal;
+    IF dayofweek(v_orderDate) = 1 THEN
+        UPDATE Orders
+		SET Orders.total = 20.99
+		WHERE orderID = new.orderID;
+    ELSE
+    
+		-- AFTER the new insert associating a MenuMenuItem with an Order
+		-- find the total for that specific Order based on the price of each MenuMenuItem
+		SELECT SUM(price)
+		INTO newtotal
+		FROM MenuMenuItem NATURAL JOIN OrderDetails
+		WHERE orderID = new.orderID;
+		
+		-- find if the specific order has the happyhourdiscount
+		SELECT happyHourDiscount
+		INTO v_happyhourdiscount
+		FROM Orders
+		WHERE orderID = new.orderID;
+		
+		-- apply happy hour discount if available
+		IF v_happyhourdiscount = true THEN
+			SET newtotal = 0.5 * newtotal;
+		END IF;
+		
+		-- update the Orders table with the correct total
+		-- THIS MEANS THAT QUERYING FOR SUM(PRICE) WILL GIVE AN INCORRECT RESULT IF 
+		-- THERE IS A HAPPY HOUR DISCOUNT
+		UPDATE Orders
+		SET Orders.total = newtotal
+		WHERE orderID = new.orderID;
     END IF;
     
-    -- update the Orders table with the correct total
-    -- THIS MEANS THAT QUERYING FOR SUM(PRICE) WILL GIVE AN INCORRECT RESULT IF 
-    -- THERE IS A HAPPY HOUR DISCOUNT
-    UPDATE Orders
-	SET Orders.total = newtotal
-	WHERE orderID = new.orderID;
 END $$
 
 create TRIGGER INSERT_happyHourDiscount
