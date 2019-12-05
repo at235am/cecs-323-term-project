@@ -340,7 +340,7 @@ CREATE TABLE ContactInfo
 (
 	customerID	     INT NOT NULL,
     email 		     VARCHAR(50), 
-    snailMailAddress VARCHAR(50),
+    snailMailAddress VARCHAR(100),
     phone            VARCHAR(20),
     CONSTRAINT      PK_ContactInfo 				PRIMARY KEY(customerID,email),
     CONSTRAINT      FK_Customer_ContactInfo 	FOREIGN KEY (customerID)		REFERENCES Customer (customerID)
