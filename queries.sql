@@ -27,24 +27,47 @@ FROM
 	(SELECT * FROM CorporateCustomer NATURAL JOIN Customer NATURAL JOIN ContactInfo) AS C
 USING (customerID);
 
-
 -- b. List the top three customers in terms of their net spending for the past two years, and the total that they have spent in that period.
-
+SELECT A.customerID, A.cFirstName, A.cLastName, SUM(A.total) AS `Total Spent Last 2 Years`
+FROM
+(
+	SELECT *
+	FROM Customer NATURAL JOIN Orders
+	WHERE orderDate >= DATE_SUB(NOW(), INTERVAL 2 YEAR)
+) AS A
+GROUP BY A.customerID
+ORDER BY SUM(A.total) DESC
+LIMIT 3;
 
 -- c. Find all of the sous chefs who have three or more menu items that they can prepare.  For each sous chef, list their name, the number of menu items that they can prepare, and each of the menu items.  You can use group_concat to get all of a given sous chef’s data on one row, or print out one row per sous chef per menu item.
-
+SELECT empID, firstName, lastName, menuItemName
+FROM Expertise NATURAL JOIN Employee
+WHERE empID IN
+(
+	SELECT empID
+	FROM Expertise NATURAL JOIN Employee
+	GROUP BY empID
+	HAVING COUNT(empID) >= 3
+)
+ORDER BY empID;
 
 -- d. Find all of the sous chefs who have three or more menu items in common.
+-- i. Please give the name of each of the two sous chefs sharing three or more menu items.
+-- i..Please make sure that any given pair of sous chefs only shows up once.
+SELECT *
+FROM Expertise NATURAL JOIN Employee;
 
-
--- . Please give the name of each of the two sous chefs sharing three or more menu items.
-
-
--- . Please make sure that any given pair of sous chefs only shows up once.
-
-
+SELECT *
+FROM Expertise NATURAL JOIN Employee
+GROUP BY menuItemName;
+    
 -- e. Find the three menu items most often ordered from the Children’s menu and order them from most frequently ordered to least frequently ordered.
-
+SELECT menuType, menuItemName, sum(quantity) AS `# of times ordered`
+FROM OrderDetails
+WHERE menuType = 'Children'
+GROUP BY menuItemName
+ORDER BY sum(quantity) DESC
+LIMIT 3;
 
 -- f. List all the menu items, the shift in which the menu item was ordered, and the sous chef on duty at the time, when the sous chef was not an expert in that menu item.
 

@@ -327,9 +327,9 @@ CREATE TABLE CorporateCustomer
 CREATE TABLE MimingsMoney
 (
 	customerID     INT NOT NULL,
-    creditEarned   FLOAT NOT NULL,
-    creditSpent    FLOAT NOT NULL,
-    currentBalance FLOAT NOT NULL,
+    creditEarned   INT DEFAULT 0,
+    creditSpent    DECIMAL(10, 2) DEFAULT 0,
+    currentBalance DECIMAL(10, 2) DEFAULT 0,
     CONSTRAINT     PK_MimingMoney  			PRIMARY KEY(customerID),
     CONSTRAINT     FK_Customer_MimingMoney FOREIGN KEY (customerID)		REFERENCES Customer (customerID)
 );
@@ -624,6 +624,7 @@ BEGIN
     END IF;
 END $$
 
+-- ensures that there exists a waiter with {empID} within the shift that the table is assigned
 CREATE TRIGGER INSERT_Waiter_SeatingTable
 AFTER INSERT
 ON SeatingTable FOR EACH ROW
@@ -652,6 +653,7 @@ BEGIN
 		SET new.extraDishMoney = 0;
     END IF; 
 END $$
+
 
 
 CREATE TRIGGER DERIVED_ATTR_MoraleBonus
