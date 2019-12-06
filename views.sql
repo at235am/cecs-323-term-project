@@ -3,6 +3,85 @@
 -- If a given item is not on a particular menu, then report “N/A” for that particular item for that particular menu. 
 -- Also, if an item only appears as a single serving portion, put in “N/A” into the report for the gallon, … prices.
 
+-- All the MenuItems that are NOT on the 'Evening' Menu
+CREATE OR REPLACE VIEW MenuItem_v AS
+SELECT a.menuType, a.menuItemName, a.spiciness, a.prices, a.portionSizes
+FROM 
+	(SELECT 'Evening' AS menuType, menuItemName, spiciness, 'N/A' AS prices, 'N/A' AS portionSizes
+	FROM MenuItem) AS a
+	LEFT JOIN 
+	(SELECT MM.menuType, MM.menuItemName, M.spiciness, MM.price, MM.portionSize
+	FROM MenuMenuItem MM LEFT OUTER JOIN MenuItem M
+	ON MM.menuItemName = M.menuItemName
+	WHERE menuType = 'Evening') AS b
+ON a.menuItemName = b.menuItemName
+WHERE b.price IS NULL
+UNION
+-- All the MenuItems that are on the 'Evening' Menu
+SELECT MM.menuType, MM.menuItemName, M.spiciness, MM.price, MM.portionSize
+FROM MenuMenuItem MM LEFT OUTER JOIN MenuItem M
+ON MM.menuItemName = M.menuItemName
+WHERE menuType = 'Evening'
+UNION -- --------------------------------------------------
+-- All the MenuItems that are NOT on the 'Lunch' Menu
+SELECT a.menuType, a.menuItemName, a.spiciness, a.prices, a.portionSizes
+FROM 
+	(SELECT 'Lunch' AS menuType, menuItemName, spiciness, 'N/A' AS prices, 'N/A' AS portionSizes
+	FROM MenuItem) AS a
+	LEFT JOIN 
+	(SELECT MM.menuType, MM.menuItemName, M.spiciness, MM.price, MM.portionSize
+	FROM MenuMenuItem MM LEFT OUTER JOIN MenuItem M
+	ON MM.menuItemName = M.menuItemName
+	WHERE menuType = 'Lunch') AS b
+ON a.menuItemName = b.menuItemName
+WHERE b.price IS NULL
+UNION
+-- All the MenuItems that are on the 'Lunch' Menu
+SELECT MM.menuType, MM.menuItemName, M.spiciness, MM.price, MM.portionSize
+FROM MenuMenuItem MM LEFT OUTER JOIN MenuItem M
+ON MM.menuItemName = M.menuItemName
+WHERE menuType = 'Lunch'
+UNION -- --------------------------------------------------
+-- All the MenuItems that are NOT on the 'Children' Menu
+SELECT a.menuType, a.menuItemName, a.spiciness, a.prices, a.portionSizes
+FROM 
+	(SELECT 'Children' AS menuType, menuItemName, spiciness, 'N/A' AS prices, 'N/A' AS portionSizes
+	FROM MenuItem) AS a
+	LEFT JOIN 
+	(SELECT MM.menuType, MM.menuItemName, M.spiciness, MM.price, MM.portionSize
+	FROM MenuMenuItem MM LEFT OUTER JOIN MenuItem M
+	ON MM.menuItemName = M.menuItemName
+	WHERE menuType = 'Children') AS b
+ON a.menuItemName = b.menuItemName
+WHERE b.price IS NULL
+UNION
+-- All the MenuItems that are on the 'Children' Menu
+SELECT MM.menuType, MM.menuItemName, M.spiciness, MM.price, MM.portionSize
+FROM MenuMenuItem MM LEFT OUTER JOIN MenuItem M
+ON MM.menuItemName = M.menuItemName
+WHERE menuType = 'Children'
+UNION -- --------------------------------------------------
+-- All the MenuItems that are NOT on the 'Sunday Brunch Buffet' Menu
+SELECT a.menuType, a.menuItemName, a.spiciness, a.prices, a.portionSizes
+FROM 
+	(SELECT 'Sunday Brunch Buffet' AS menuType, menuItemName, spiciness, 'N/A' AS prices, 'N/A' AS portionSizes
+	FROM MenuItem) AS a
+	LEFT JOIN 
+	(SELECT MM.menuType, MM.menuItemName, M.spiciness, MM.price, MM.portionSize
+	FROM MenuMenuItem MM LEFT OUTER JOIN MenuItem M
+	ON MM.menuItemName = M.menuItemName
+	WHERE menuType = 'Sunday Brunch Buffet') AS b
+ON a.menuItemName = b.menuItemName
+WHERE b.price IS NULL
+UNION
+-- All the MenuItems that are on the 'Sunday Brunch Buffet' Menu
+SELECT MM.menuType, MM.menuItemName, M.spiciness, MM.price, MM.portionSize
+FROM MenuMenuItem MM LEFT OUTER JOIN MenuItem M
+ON MM.menuItemName = M.menuItemName
+WHERE menuType = 'Sunday Brunch Buffet'
+ORDER BY menuType, menuItemName;
+
+SELECT * FROM MenuItem_v;
 
 -- Customer_addresses_v:
 -- For each customer, indicate whether they are an individual or a corporate account, 
@@ -32,6 +111,7 @@ FROM
 	INNER JOIN
 	(SELECT * FROM MimingsMoney NATURAL JOIN  CorporateCustomer NATURAL JOIN Customer NATURAL JOIN ContactInfo) AS C
 USING (customerID);
+
 SELECT * FROM Customer_addresses_v;
 
 -- Sous_mentor_v:
