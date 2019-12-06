@@ -91,7 +91,7 @@ FROM
 FROM OrderDetails NATURAL JOIN Orders) AS A
 INNER JOIN
 (SELECT *
-FROM Employee NATURAL JOIN WorkSchedule NATURAL JOIN WorkShift NATURAL JOIN ShiftDetails
+FROM Employee NATURAL JOIN WorkSchedule NATURAL JOIN WorkShift NATURAL JOIN ShiftType
 WHERE empID IN
 (SELECT empID FROM SousChef)) AS B
 ON orderDate = dateOfShift AND orderTime >= startTime AND orderTime <= endTime

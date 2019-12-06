@@ -27,7 +27,7 @@ DROP TABLE IF EXISTS EmployeeOfTheMonth;
 DROP TABLE IF EXISTS SeatingTable;
 DROP TABLE IF EXISTS WorkSchedule;
 DROP TABLE IF EXISTS WorkShift;
-DROP TABLE IF EXISTS ShiftDetails;
+DROP TABLE IF EXISTS ShiftType;
 ------------------------------------------------
 DROP TABLE IF EXISTS Mentorship;
 DROP TABLE IF EXISTS Expertise;
@@ -222,12 +222,12 @@ CREATE TABLE Tip
     CONSTRAINT		FK_Waiter_Tip 	FOREIGN KEY (empID) 		REFERENCES Waiter (empID)
 );
 
-CREATE TABLE ShiftDetails
+CREATE TABLE ShiftType
 (
     shiftType   ENUM('Morning', 'Evening')     	NOT NULL,
     startTime 	TIME            				NOT NULL,
 	endTime 	TIME            				NOT NULL,
-    CONSTRAINT  PK_ShiftDetails 	PRIMARY KEY (shiftType)
+    CONSTRAINT  PK_ShiftType 	PRIMARY KEY (shiftType)
 );
 
 CREATE TABLE WorkShift
@@ -238,7 +238,7 @@ CREATE TABLE WorkShift
 	busyness   	ENUM('High', 'Medium', 'Low')   NOT NULL,
     CONSTRAINT  PK_WorkShift 				PRIMARY KEY (shiftID),
     CONSTRAINT 	UC_Employee					UNIQUE (shiftType, dateOfShift),
-    CONSTRAINT  FK_ShiftDetails_WorkShift	FOREIGN KEY (shiftType) 	REFERENCES ShiftDetails (shiftType)
+    CONSTRAINT  FK_ShiftType_WorkShift	FOREIGN KEY (shiftType) 	REFERENCES ShiftType (shiftType)
 );
 
 CREATE TABLE WorkSchedule

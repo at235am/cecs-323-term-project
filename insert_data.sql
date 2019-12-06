@@ -1662,7 +1662,7 @@ INSERT INTO OrderDetails(menuType, menuItemName, orderID, quantity) VALUES
 
 ('Children', 'Tacos', 	100, 22);
 
-INSERT INTO ShiftDetails(shiftType, startTime, endTime) VALUES 
+INSERT INTO ShiftType(shiftType, startTime, endTime) VALUES 
 ('Morning', '08:00:00', '15:59:59'), -- 8am to 3:59pm
 ('Evening', '16:00:00', '24:00:00'); -- 4pm to 12am(midnight)
 
