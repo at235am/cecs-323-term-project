@@ -1,5 +1,3 @@
-DROP TABLE IF EXISTS TriggerDebug;
-
 DROP TABLE IF EXISTS OrderDetails;
 DROP TABLE IF EXISTS ChowMein;
 DROP TABLE IF EXISTS EggFooYoung;
@@ -60,19 +58,6 @@ DROP TABLE IF EXISTS FullTimeEmployee;
 DROP TABLE IF EXISTS PartTimeEmployee;
 DROP TABLE IF EXISTS Employee;
 ------------------------------------------------
--- use this table if you need to debug a trigger
--- just INSERT INTO TriggerDebug(id, tableName, ...) VALUES (variableYouWannaPrint, ...) inside the trigger
--- ex:
--- INSERT INTO TriggerDebug(tableName, rowOrPk, message) VALUES 
---    ('', cast(new.orderID as char), '');
-CREATE TABLE TriggerDebug
-(
-	id INT NOT NULL AUTO_INCREMENT,
-    tableName VARCHAR(50) DEFAULT NULL,
-    rowOrPK VARCHAR(50) DEFAULT NULL,
-    message VARCHAR(255) DEFAULT NULL,
-    CONSTRAINT  PK_TriggerDebug 	PRIMARY KEY (id)
-);
 
 CREATE TABLE Employee
 (
@@ -270,11 +255,11 @@ CREATE TABLE SeatingTable
 (
 	stID			INT			NOT NULL	AUTO_INCREMENT,
 	shiftID			INT			NOT NULL,
+    empID   		INT			NOT NULL,
     tableNum 		TINYINT		NOT NULL,
-	empID   		INT			NOT NULL,
     maxOccupancy	TINYINT		NOT NULL,
     CONSTRAINT  	PK_SeatingTable 			PRIMARY KEY (stID),
-    CONSTRAINT 		UC_SeatingTable				UNIQUE (shiftID, tableNum),
+    CONSTRAINT 		UC_SeatingTable				UNIQUE (shiftID, empID, tableNum),
     CONSTRAINT		FK_Waiter_SeatingTable 		FOREIGN KEY (empID) 	REFERENCES Waiter (empID),
     CONSTRAINT		FK_WorkShift_SeatingTable 	FOREIGN KEY (shiftID) 	REFERENCES WorkShift (shiftID)
 );

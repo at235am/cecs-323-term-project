@@ -1,4 +1,3 @@
-
 INSERT INTO Employee(firstName, lastName, birthdate, hiredDate) VALUES 
 ('Lorde', 		'Willing', 			'2000-12-25', '2019-07-30'),
 ('Rip', 		'Harambe', 			'1999-05-27', '2018-05-28'), -- noone dare change this date
@@ -282,7 +281,6 @@ INSERT INTO Ingredients(recID, ingredientName, quantity) VALUE
 (17, 'Fish sauce', 2),
 (17, 'Olive oil', 2);
 
-
 INSERT INTO Station(stationName, responsibilityDesc) VALUE
 ('Butcher', 'butches stuff'),
 ('Fry Cook', 'fries stuff'),
@@ -431,82 +429,71 @@ INSERT INTO DishBonus(empID, dateWorked, dishesWashed) VALUES
 (38, '2018-08-09', 102);
 
 INSERT INTO Tip(empID, dateOfTip, timeOfTip, tipAmount) VALUES
-(39, '2018-05-01', current_time(), 6.01),
-(39, '2018-05-03', current_time(), 2.5),
-(39, '2018-05-04', current_time(), 1),
-(39, '2018-05-09', current_time(), 100),
-(39, '2018-05-13', current_time(), 18),
-(39, '2018-05-18', current_time(), 10),
-(39, '2018-05-26', current_time(), 6),
-(39, '2018-05-30', current_time(), 5),
-
-(40, '2017-09-12', current_time(), 2),
-(40, '2017-09-20', current_time(), 5),
-(40, '2017-09-30', current_time(), 8),
-
-(41, '2018-07-12', current_time(), 4.20),
-(41, '2018-07-22', current_time(), 200),
-(41, '2018-07-24', current_time(), 5),
-
-(42, '2017-08-01', current_time(), 1.69),
-(42, '2017-08-03', current_time(), 10),
-(42, '2017-08-04', current_time(), 6),
-(42, '2017-08-09', current_time(), 8),
-(42, '2017-08-13', current_time(), 3),
-(42, '2017-08-18', current_time(), 8),
-(42, '2017-08-26', current_time(), 4),
-(42, '2017-08-30', current_time(), 2),
-
-(43, '2018-06-2', current_time(),4),
-(43, '2018-06-5', current_time(),6),
-(43, '2018-06-8', current_time(),8),
-(43, '2018-06-12',current_time(),2),
-
-(44, '2019-07-2',current_time(),2),
-(44, '2019-07-4',current_time(),5),
-(44, '2019-07-5',current_time(),8),
-(44, '2019-07-12',current_time(),3),
-(44, '2019-07-14',current_time(),6),
-(44, '2019-07-19',current_time(),6),
-
-(45, '2018-01-2',current_time(),9),
-(45, '2018-01-7',current_time(),2),
-(45, '2018-01-16',current_time(),5),
-(45, '2018-02-20',current_time(),8),
-(45, '2018-02-21',current_time(),2),
-(45, '2018-02-22',current_time(),5),
-(45, '2018-01-15',current_time(),8),
-(45, '2018-01-18',current_time(),2),
-(45, '2018-01-20',current_time(),5),
-(45, '2018-01-26',current_time(),8),
-
-(46, '2017-12-27', current_time(), 10),
-(46, '2017-12-28', current_time(), 6),
-(46, '2017-12-29', current_time(), 5),
-(46, '2017-12-30', current_time(), 2),
-(46, '2018-01-01', current_time(), 5),
-
-(47, '2018-04-09', current_time(), 8),
-(47, '2018-04-13', current_time(), 3),
-(47, '2018-04-18', current_time(), 8),
-(47, '2018-04-19', current_time(), 4),
-(47, '2018-04-21', current_time(), 2),
-(47, '2018-04-24', current_time(),4),
-(47, '2018-04-27', current_time(),6),
-
-(48, '2019-02-01', current_time(), 2),
-(48, '2019-02-11', current_time(), 5),
-(48, '2019-02-12', current_time(), 8),
-
-(49, '2019-03-01',current_time(),8),
-(49, '2019-03-02',current_time(),3),
-(49, '2019-03-03',current_time(),6),
-(49, '2019-03-04',current_time(),6),
-(49, '2019-03-05',current_time(),9),
-
-(50, '2018-11-01', current_time(), 6.01),
-(50, '2018-11-03', current_time(), 2.5),
-(50, '2018-11-04', current_time(), 1);
+(39, '2018-05-01', '10:00:00', 6.01),
+(39, '2018-05-03', '10:12:00', 2.5),
+(39, '2018-05-04', '12:01:00', 1),
+(39, '2018-05-09', '15:02:00', 100),
+(39, '2018-05-13', '16:03:00', 18),
+(39, '2018-05-18', '22:04:00', 10),
+(39, '2018-05-26', '11:05:00', 6),
+(39, '2018-05-30', '20:12:00', 5),
+(40, '2017-09-12', '16:06:00', 2),
+(40, '2017-09-20', '11:07:00', 5),
+(40, '2017-09-30', '15:08:00', 8),
+(41, '2018-07-12', '22:09:00', 4.20),
+(41, '2018-07-22', '15:10:00', 200),
+(41, '2018-07-24', '22:11:00', 5),
+(42, '2017-08-01', '20:12:00', 1.69),
+(42, '2017-08-03', '15:13:00', 10),
+(42, '2017-08-04', '11:14:00', 6),
+(42, '2017-08-09', '15:15:00', 8),
+(42, '2017-08-13', '20:16:00', 3),
+(42, '2017-08-18', '20:17:00', 8),
+(42, '2017-08-26', '11:12:00', 4),
+(42, '2017-08-30', '22:18:00', 2),
+(43, '2018-06-02', '20:19:00', 4),
+(43, '2018-06-05', '15:20:00', 6),
+(43, '2018-06-08', '20:21:00', 8),
+(43, '2018-06-12', '11:22:00', 2),
+(44, '2019-07-02', '12:23:00', 2),
+(44, '2019-07-04', '16:24:00', 5),
+(44, '2019-07-05', '12:25:00', 8),
+(44, '2019-07-12', '14:26:00', 3),
+(44, '2019-07-14', '11:27:00', 6),
+(44, '2019-07-19', '12:28:00', 6),
+(45, '2018-01-02', '12:29:00', 9),
+(45, '2018-01-07', '12:30:00', 2),
+(45, '2018-01-16', '11:31:00', 5),
+(45, '2018-02-20', '14:32:00', 8),
+(45, '2018-02-21', '22:12:00', 2),
+(45, '2018-02-22', '12:33:00', 5),
+(45, '2018-01-15', '15:34:00', 8),
+(45, '2018-01-18', '13:35:00', 2),
+(45, '2018-01-20', '16:36:00', 5),
+(45, '2018-01-26', '20:37:00', 8),
+(46, '2017-12-27', '12:38:00', 10),
+(46, '2017-12-28', '13:39:00', 6),
+(46, '2017-12-29', '20:40:00', 5),
+(46, '2017-12-30', '11:41:00', 2),
+(46, '2018-01-01', '12:12:00', 5),
+(47, '2018-04-09', '16:42:00', 8),
+(47, '2018-04-13', '19:43:00', 3),
+(47, '2018-04-18', '14:44:00', 8),
+(47, '2018-04-19', '22:45:00', 4),
+(47, '2018-04-21', '19:46:00', 2),
+(47, '2018-04-24', '12:47:00', 4),
+(47, '2018-04-27', '11:48:00', 6),
+(48, '2019-02-01', '16:49:00', 2),
+(48, '2019-02-11', '19:50:00', 5),
+(48, '2019-02-12', '20:51:00', 8),
+(49, '2019-03-01', '19:52:00', 8),
+(49, '2019-03-02', '11:53:00', 3),
+(49, '2019-03-03', '16:12:00', 6),
+(49, '2019-03-04', '19:54:00', 6),
+(49, '2019-03-05', '20:55:00', 9),
+(50, '2018-11-01', '19:56:00', 6.01),
+(50, '2018-11-03', '16:57:00', 2.5),
+(50, '2018-11-04', '17:58:00', 1);
 
 INSERT INTO MoraleBonus(empID, month, year) VALUES
 (42, 8, 2017),
@@ -705,13 +692,13 @@ INSERT INTO Expertise(empID, menuItemName) VALUES
 (13, 	'Chicken Wings'),
 (13, 	'Cucumber Sandwiches'),
 (13, 	'Pad Thai');
+
 -- studentID != mentorID
 -- (mentorID, menuItemName) combo MUST already exist in Expertise table
 -- endDate has to be greater than the startDate
 -- if you insert a Mentorship with an endDate that has not passed yet 
 -- then the Mentorship has not been completed 
 -- therefore the SousChef with studentID will NOT be inserted into the Expertise table
-
 INSERT INTO Mentorship(studentID, mentorID, menuItemName, startDate, endDate) VALUES
 (10,		7, 		'Bacon Brussel Sprouts',					'2017-08-30','2017-09-16'),
 (6,			7, 		'Bacon Brussel Sprouts',					'2017-09-17','2017-09-27'),
@@ -735,7 +722,6 @@ INSERT INTO Mentorship(studentID, mentorID, menuItemName, startDate, endDate) VA
 (7,			9, 		'Sweet & Sour Chicken',						'2019-07-12','2019-08-16'),
 (12,		9, 		'Sweet & Sour Chicken',						'2019-10-04','2019-10-25'),
 (6,			13, 	'Tacos',									'2019-12-01','2019-12-22');
-
 
 INSERT INTO Customer (cFirstName, cLastName,cDOB) VALUES 
 ('Alta','Ward','1999-11-07'),
@@ -827,7 +813,6 @@ INSERT INTO PrivateCustomer (customerID) VALUES
 (39),
 (40);
 
-
 INSERT INTO CorporateCustomer (customerID, orgName, deptName, officeAddress) VALUES 
 (11, 'Burger King', 'Sales', '17 Fawn St.North Haven, CT 06473'),
 (13, 'Yahoo!', 'Engineering', '659 Jockey Hollow Street Attleboro, MA 02703'),
@@ -855,8 +840,6 @@ INSERT INTO CorporateCustomer (customerID, orgName, deptName, officeAddress) VAL
 (9, 'HP', 'Logistics', '7555 Wintergreen Dr. West Deptford, NJ 08096'),
 (10, 'T-Money Inc', 'Engineering', '281 South Lake Street Medford, MA 02155'),
 (31, 'Maverick' , 'Sales', '388 Windfall Drive Huntington Station, NY 11746');
-
-
 
 INSERT INTO MimingsMoney (customerID, creditEarned, creditSpent, currentBalance) VALUES 
 (1, 23, 8.43, 10.57),
@@ -909,7 +892,6 @@ INSERT INTO MimingsMoney (customerID, creditEarned, creditSpent, currentBalance)
 (48, 21, 2.76, 5.24),
 (49, 13, 0, 10.44),
 (50, 6, 3.00, 3.00);
-
 
 INSERT INTO ContactInfo (customerID, email, snailMailAddress, phone) VALUES 
 (1, 'getmehere@gmail.com', '21 Constitution Ave. Elmont, NY 11003', '202-555-0130'),
@@ -997,13 +979,11 @@ Jimenezchester, UT 16390','385-657-5972'),
 (50, 'mjohnson@davila-bernard.com', '97628 Kevin Drives Suite 188
 Brandonside, OK 12282','710-469-3531');
 
-
 INSERT INTO Orders(customerID, orderDate, orderTime) VALUES
 #Lunch '10:00:00', '16:59:59'
 #Evening '17:00:00' - '23:00:00'
 #SUNDY '10:00:00' - '23:00:00'
 #Children '10:00:00' - '23:00:00'
-
 
 #LUNCH----------------------------------------------------
 (1,'2017-09-27','11:30:00'), 
@@ -1128,13 +1108,6 @@ INSERT INTO Orders(customerID, orderDate, orderTime) VALUES
 (15, '2018-11-21', '17:01:11'),
 (50,'2018-07-22', '12:39:57'),
 (27, '2019-08-26', '21:52:49');
-
-
-
-
- 
-
-
 
 INSERT INTO Payment(orderID, paymentType, paymentDate) VALUES
 (1,'card','2017-09-27'),
@@ -1314,8 +1287,6 @@ INSERT INTO CardPayment(paymentID, cardnum, expirationDate, cvv, cardtype) VALUE
 (99,741074314,'2020-10-09',571,'credit'),
 (100,37984175,'2021-10-09',415,'debit');
 
-
- 
 Insert into Cash(paymentID) values
 (5),
 (10),
@@ -1349,7 +1320,6 @@ Insert into PhoneOrder(orderID) VALUES
 (4),
 (6);
 
- 
 INSERT into WebOrder(orderID) values
 (7),
 (8),
@@ -17376,6 +17346,7 @@ INSERT INTO WorkSchedule(empID, shiftID) VALUES
 (38, 726),
 (50, 726),
 (42, 726);
+
 -- empID can be waiting IDs only: (39-50)
 INSERT INTO SeatingTable(shiftID, tableNum, empID, maxOccupancy) VALUE
 (1, 3, 49, 6),

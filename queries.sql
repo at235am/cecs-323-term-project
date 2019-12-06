@@ -232,5 +232,3 @@ ORDER BY year, month;
 SELECT empID, lastName, firstName, dateOfShift, shiftType 
 FROM Employee NATURAL JOIN WorkSchedule NATURAL JOIN WorkShift
 ORDER BY empID, dateOfShift, shiftType;
-
-
