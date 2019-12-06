@@ -2361,6 +2361,7 @@ INSERT INTO WorkShift(shiftType, dateOfShift, busyness) VALUES
 ('Evening', '2019-07-28', 'Medium'),
 ('Morning', '2019-07-31', 'Medium'),
 ('Evening', '2019-07-31', 'Medium');
+
 INSERT INTO WorkSchedule(empID, shiftID) VALUES
 (1, 1),
 (3, 1),

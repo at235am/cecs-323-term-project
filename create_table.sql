@@ -574,7 +574,6 @@ BEGIN
 	SET new.price = v_baseprice * ((100 - v_pricemodifierpercentage)/100);
 END $$
 
-
 CREATE TRIGGER INSERT_OrderDetails_must_update_Orders
 AFTER INSERT ON
 OrderDetails FOR EACH ROW
@@ -622,14 +621,44 @@ BEGIN
     
 END $$
 
-create TRIGGER INSERT_happyHourDiscount
+CREATE TRIGGER INSERT_WorkSchedule_employee_cannot_work_both_shifts_per_day
+BEFORE INSERT ON
+WorkSchedule FOR EACH ROW
+BEGIN
+	DECLARE v_dateOfShift DATE;
+    DECLARE v_shiftType VARCHAR(50);
+	DECLARE v_rowcount INT;
+    DECLARE msg varchar(255);
+    
+	SELECT shiftType
+    INTO v_shiftType
+    FROM WorkShift
+    WHERE shiftID = new.shiftID;
+    
+    SELECT dateOfShift
+    INTO v_dateOfShift
+    FROM WorkShift
+    WHERE shiftID = new.shiftID;
+	
+	SELECT count(dateOfShift)
+    INTO v_rowcount
+    FROM WorkShift NATURAL JOIN WorkSchedule
+    WHERE empID = new.empID AND dateOfShift = v_dateOfShift;
+    
+    IF v_rowcount = 1 THEN
+		SET msg = concat('Employee with empID=', cast(new.empID as char), ' is already scheduled on ', cast(v_dateOfShift as char), ' for the ', cast(v_shiftType as char), ' shift');
+        SIGNAL SQLSTATE '45000' SET message_text = msg;
+    END IF;
+END $$
+
+CREATE TRIGGER INSERT_happyHourDiscount
 BEFORE INSERT ON
 Orders FOR EACH ROW
 BEGIN
 	if new.ordertime>='17:00:00' and new.ordertime <='18:00:00' then
 		set new.happyHourDiscount = true;
 	end if;
-end $$
+END $$
 
 CREATE TRIGGER UPDATE_Orders_causes_MimingsMoney_Orders
 AFTER UPDATE

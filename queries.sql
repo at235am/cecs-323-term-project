@@ -139,7 +139,6 @@ GROUP BY menuType, menuItemName;
 
 -- l. Find the sous chef who is mentoring the most other sous chef.  
 -- List the menu items that the sous chef is passing along to the other sous chefs.
-
 SELECT empID, firstName, lastName, count(empID) AS '# of students taught', group_concat(DISTINCT menuItemName) AS 'Menu Items taught'
 FROM Employee INNER JOIN Mentorship
 ON empID = mentorID
