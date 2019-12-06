@@ -595,7 +595,7 @@ BEGIN
     
 		-- AFTER the new insert associating a MenuMenuItem with an Order
 		-- find the total for that specific Order based on the price of each MenuMenuItem
-		SELECT SUM(price)
+		SELECT SUM(price * quantity)
 		INTO newtotal
 		FROM MenuMenuItem NATURAL JOIN OrderDetails
 		WHERE orderID = new.orderID;
@@ -741,8 +741,6 @@ BEGIN
 		SET new.extraDishMoney = 0;
     END IF; 
 END $$
-
-
 
 CREATE TRIGGER DERIVED_ATTR_MoraleBonus
 BEFORE INSERT

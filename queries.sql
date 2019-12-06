@@ -98,7 +98,7 @@ ON orderDate = dateOfShift AND orderTime >= startTime AND orderTime <= endTime
 ORDER BY menuItemName, empID, dateOfShift;
 
 -- g. List the customers, sorted by the amount of Miming’s Money that they have, from largest to smallest.
-SELECT cFirstName, cLastName, cDOB, currentBalance AS 'Mimings Credit Balance'
+SELECT customerID, cFirstName, cLastName, currentBalance AS 'Mimings Credit Balance'
 FROM MimingsMoney NATURAL JOIN Customer
 ORDER BY currentBalance DESC;
 
@@ -130,12 +130,14 @@ ORDER BY SUM(A.total) DESC
 LIMIT 3;
 
 -- k. List the five menu items that have generated the most revenue for Miming’s over the past year.
-SELECT menuType, menuItemName, sum(price * quantity)
+SELECT menuItemName, sum(price * quantity) AS 'Revenue Generated Over The Past Year'
 FROM MenuMenuItem NATURAL JOIN OrderDetails NATURAL JOIN
-(SELECT *
+(SELECT orderID
 FROM Orders
 WHERE orderDate >= DATE_SUB(NOW(), INTERVAL 1 YEAR)) AS X
-GROUP BY menuType, menuItemName;
+GROUP BY menuType, menuItemName
+ORDER BY sum(price * quantity) DESC
+LIMIT 5;
 
 -- l. Find the sous chef who is mentoring the most other sous chef.  
 -- List the menu items that the sous chef is passing along to the other sous chefs.
@@ -182,3 +184,53 @@ ORDER BY menuType, menuItemName;
 
 -- p. Three additional queries that demonstrate the five additional business rules.  
 -- Feel free to create additional views to support these queries if you so desire.
+
+-- Business Rule #1:
+-- DishwashingStaff gets paid an extra $1 per washed plate AFTER 100 washed plates; 
+-- washed plate count resets each shift.
+SELECT empID, lastName, firstName, dateWorked, dishesWashed, extraDishMoney
+FROM Employee NATURAL JOIN Dishwasher NATURAL JOIN DishBonus;
+
+-- Business Rule #2:
+-- Happy Hour Discount: Orders between 5pm-6pm get 50% off the total.
+SELECT A.orderID, A.orderTime, A.happyHourDiscount, B.withoutHHDiscount AS 'Total w/o HH discount', A.total AS 'Total WITH HH discount'
+FROM
+	(SELECT * FROM Orders) AS A
+	INNER JOIN
+	(SELECT *, sum(price*quantity) AS withoutHHDiscount
+	FROM OrderDetails NATURAL JOIN MenuMenuItem
+	GROUP BY orderID) AS B
+ON A.orderID = B.orderID;
+
+-- Business Rule #3:
+-- Wait Staff Morale Bonus: Customer service can be a draining and thankless job. 
+-- Every month we pick a waiter at random to get bonus based on 10% of the tips they made for the month.
+
+SELECT A.month, A.year, A.empID, A.firstName, A.lastName, B.tipsEarned, A.bonusAmount
+FROM
+	(SELECT * FROM Employee NATURAL JOIN MoraleBonus) AS A
+	LEFT JOIN
+	(SELECT *, month(dateOfTip) AS monthB, year(dateOfTip) AS yearB, sum(tipAmount) AS tipsEarned
+	FROM Tip
+	GROUP BY empID, month(dateOfTip), year(dateOfTip)) AS B
+ON A.empID = B.empID AND A.month = month(B.dateOfTip) AND A.year = year(B.dateOfTip)
+ORDER BY A.year, A.month;
+
+
+-- Business Rule #4:
+-- Employee of the month: tracks the best performing employee for each month.
+SELECT month, year, empID, lastName, firstName, notableAchievement
+FROM EmployeeOfTheMonth NATURAL JOIN Employee
+ORDER BY year, month;
+
+-- Business Rule #5:
+-- An employee may not work both the morning and evening shifts of the same date. 
+-- This is against state/federal law because an Employee working both the morning and 
+-- evening shifts of the same day would be working 16 hours per day.
+-- (this one is implemented using triggers, but you can see that there is no employee that works 
+-- boththe evening and morning shifts for a particular date)
+SELECT empID, lastName, firstName, dateOfShift, shiftType 
+FROM Employee NATURAL JOIN WorkSchedule NATURAL JOIN WorkShift
+ORDER BY empID, dateOfShift, shiftType;
+
+
