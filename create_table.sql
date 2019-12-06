@@ -29,6 +29,7 @@ DROP TABLE IF EXISTS EmployeeOfTheMonth;
 DROP TABLE IF EXISTS SeatingTable;
 DROP TABLE IF EXISTS WorkSchedule;
 DROP TABLE IF EXISTS WorkShift;
+DROP TABLE IF EXISTS ShiftDetails;
 ------------------------------------------------
 DROP TABLE IF EXISTS Mentorship;
 DROP TABLE IF EXISTS Expertise;
@@ -236,14 +237,23 @@ CREATE TABLE Tip
     CONSTRAINT		FK_Waiter_Tip 	FOREIGN KEY (empID) 		REFERENCES Waiter (empID)
 );
 
+CREATE TABLE ShiftDetails
+(
+    shiftType   ENUM('Morning', 'Evening')     	NOT NULL,
+    startTime 	TIME            				NOT NULL,
+	endTime 	TIME            				NOT NULL,
+    CONSTRAINT  PK_ShiftDetails 	PRIMARY KEY (shiftType)
+);
+
 CREATE TABLE WorkShift
 (
     shiftID   	INT     						NOT NULL AUTO_INCREMENT,
     shiftType   ENUM('Morning', 'Evening')     	NOT NULL,
     dateOfShift DATE            				NOT NULL,
 	busyness   	ENUM('High', 'Medium', 'Low')   NOT NULL,
-    CONSTRAINT  PK_WorkShift 	PRIMARY KEY (shiftID),
-    CONSTRAINT 	UC_Employee		UNIQUE (shiftType, dateOfShift)
+    CONSTRAINT  PK_WorkShift 				PRIMARY KEY (shiftID),
+    CONSTRAINT 	UC_Employee					UNIQUE (shiftType, dateOfShift),
+    CONSTRAINT  FK_ShiftDetails_WorkShift	FOREIGN KEY (shiftType) 	REFERENCES ShiftDetails (shiftType)
 );
 
 CREATE TABLE WorkSchedule
@@ -616,7 +626,7 @@ create TRIGGER INSERT_happyHourDiscount
 BEFORE INSERT ON
 Orders FOR EACH ROW
 BEGIN
-	if new.ordertime>='18:00:00' and new.ordertime <='19:00:00' then
+	if new.ordertime>='17:00:00' and new.ordertime <='18:00:00' then
 		set new.happyHourDiscount = true;
 	end if;
 end $$

@@ -1,6 +1,8 @@
+-- a. List the customers.  For each customer, indicate which category he or she falls into, 
+-- and his or her contact information.  
+-- If you have more than one independent categorization of customers, 
+-- please indicate which category the customer falls into for all of the categorizations.
 
-
--- a. List the customers.  For each customer, indicate which category he or she falls into, and his or her contact information.  If you have more than one independent categorization of customers, please indicate which category the customer falls into for all of the categorizations.
 -- Private ONLY
 SELECT P.customerID, 'Private' as typeOfCustomer, P.cFirstName, P.cLastName, P.email, P.snailMailAddress, P.phone
 FROM 
@@ -27,8 +29,9 @@ FROM
 	(SELECT * FROM CorporateCustomer NATURAL JOIN Customer NATURAL JOIN ContactInfo) AS C
 USING (customerID);
 
--- b. List the top three customers in terms of their net spending for the past two years, and the total that they have spent in that period.
-SELECT A.customerID, A.cFirstName, A.cLastName, SUM(A.total) AS `Total Spent Last 2 Years`
+-- b. List the top three customers in terms of their net spending for the past two years, 
+-- and the total that they have spent in that period.
+SELECT A.customerID, A.cFirstName, A.cLastName, SUM(A.total) AS 'Total Spent Last 2 Years'
 FROM
 (
 	SELECT *
@@ -39,7 +42,11 @@ GROUP BY A.customerID
 ORDER BY SUM(A.total) DESC
 LIMIT 3;
 
--- c. Find all of the sous chefs who have three or more menu items that they can prepare.  For each sous chef, list their name, the number of menu items that they can prepare, and each of the menu items.  You can use group_concat to get all of a given sous chef’s data on one row, or print out one row per sous chef per menu item.
+-- c. Find all of the sous chefs who have three or more menu items that they can prepare.  
+-- For each sous chef, list their name, the number of menu items that they can prepare, 
+-- and each of the menu items.  
+-- You can use group_concat to get all of a given sous chef’s data on one row, 
+-- or print out one row per sous chef per menu item.
 SELECT empID, firstName, lastName, menuItemName
 FROM Expertise NATURAL JOIN Employee
 WHERE empID IN
@@ -54,14 +61,21 @@ ORDER BY empID;
 -- d. Find all of the sous chefs who have three or more menu items in common.
 -- i. Please give the name of each of the two sous chefs sharing three or more menu items.
 -- i..Please make sure that any given pair of sous chefs only shows up once.
-SELECT *
-FROM Expertise NATURAL JOIN Employee;
-
-SELECT *
-FROM Expertise NATURAL JOIN Employee
-GROUP BY menuItemName;
+SELECT 
+A.empID AS 'SousChef A ID', A.lastName AS 'SousChef A LastName', A.firstName AS 'SousChef A FirstName',
+B.empID AS 'SousChef B ID', B.lastName AS 'SousChef B LastName', B.firstName AS 'SousChef B FirstName',
+count(B.empID) AS '# of MenuItems shared'
+FROM 
+	(SELECT * FROM Expertise NATURAL JOIN Employee) AS A
+	INNER JOIN
+	(SELECT * FROM Expertise NATURAL JOIN Employee) AS B
+ON A.menuItemName = B.menuItemName
+WHERE A.empID < B.empID
+GROUP BY A.empID, B.empID
+HAVING count(B.empID) >= 3;
     
--- e. Find the three menu items most often ordered from the Children’s menu and order them from most frequently ordered to least frequently ordered.
+-- e. Find the three menu items most often ordered from the Children’s menu 
+-- and order them from most frequently ordered to least frequently ordered.
 SELECT menuType, menuItemName, sum(quantity) AS '# of times ordered'
 FROM OrderDetails
 WHERE menuType = 'Children'
@@ -69,28 +83,42 @@ GROUP BY menuItemName
 ORDER BY sum(quantity) DESC
 LIMIT 3;
 
--- f. List all the menu items, the shift in which the menu item was ordered, and the sous chef on duty at the time, when the sous chef was not an expert in that menu item.
-
+-- f. List all the menu items, the shift in which the menu item was ordered, 
+-- and the sous chef on duty at the time, when the sous chef was not an expert in that menu item.
+SELECT A.menuItemName, B.shiftType, B.dateOfShift, B.empID, B.lastName AS 'SousChef Last Name', B.firstName AS 'SousChef First Name'
+FROM
+(SELECT *
+FROM OrderDetails NATURAL JOIN Orders) AS A
+INNER JOIN
+(SELECT *
+FROM Employee NATURAL JOIN WorkSchedule NATURAL JOIN WorkShift NATURAL JOIN ShiftDetails
+WHERE empID IN
+(SELECT empID FROM SousChef)) AS B
+ON orderDate = dateOfShift AND orderTime >= startTime AND orderTime <= endTime
+ORDER BY menuItemName, empID, dateOfShift;
 
 -- g. List the customers, sorted by the amount of Miming’s Money that they have, from largest to smallest.
 SELECT cFirstName, cLastName, cDOB, currentBalance AS 'Mimings Credit Balance'
 FROM MimingsMoney NATURAL JOIN Customer
 ORDER BY currentBalance DESC;
 
--- h. List the customers and the total that they have spent at Miming’s ever, in descending order by the amount that they have spent.
+-- h. List the customers and the total that they have spent at Miming’s ever, 
+-- in descending order by the amount that they have spent.
 SELECT cFirstName, cLastName, cDOB, SUM(total) AS 'Lifetime Total Spent'
 FROM Customer NATURAL JOIN Orders
 GROUP BY customerID
 ORDER BY SUM(total) DESC;
 
--- i. Report on the customers at Miming’s by the number of times that they come in by month and order the report from most frequent to least frequent.
+-- i. Report on the customers at Miming’s by the number of times that they come in by month 
+-- and order the report from most frequent to least frequent.
 SELECT monthname(orderDate) AS 'Month' , count(month(orderDate)) AS 'Visits'
 FROM EatInOrder NATURAL JOIN Orders
 GROUP BY month(orderDate)
 ORDER BY count(month(orderDate)) DESC;
 
--- j. List the three customers who have spent the most at Miming’s over the past year.  Order by the amount that they spent, from largest to smallest.
-SELECT A.customerID, A.cFirstName, A.cLastName, SUM(A.total) AS `Total Spent Last Year`
+-- j. List the three customers who have spent the most at Miming’s over the past year.  
+-- Order by the amount that they spent, from largest to smallest.
+SELECT A.customerID, A.cFirstName, A.cLastName, SUM(A.total) AS 'Total Spent Last Year'
 FROM
 (
 	SELECT *
@@ -109,7 +137,8 @@ FROM Orders
 WHERE orderDate >= DATE_SUB(NOW(), INTERVAL 1 YEAR)) AS X
 GROUP BY menuType, menuItemName;
 
--- l. Find the sous chef who is mentoring the most other sous chef.  List the menu items that the sous chef is passing along to the other sous chefs.
+-- l. Find the sous chef who is mentoring the most other sous chef.  
+-- List the menu items that the sous chef is passing along to the other sous chefs.
 
 SELECT empID, firstName, lastName, count(empID) AS '# of students taught', group_concat(DISTINCT menuItemName) AS 'Menu Items taught'
 FROM Employee INNER JOIN Mentorship
@@ -139,9 +168,6 @@ GROUP BY menuItemName
 ORDER BY count(menuItemName)
 LIMIT 3;
 
-SELECT *
-FROM Expertise;
-
 -- n. List all of the customers who eat at Miming’s on their own as well as ordering for their corporation.
 SELECT DISTINCT customerID, P.cFirstName, P.cLastName, P.email, P.snailMailAddress, P.phone
 FROM
@@ -155,4 +181,5 @@ SELECT menuType, menuItemName, price
 FROM MenuMenuItem
 ORDER BY menuType, menuItemName;
 
--- p. Three additional queries that demonstrate the five additional business rules.  Feel free to create additional views to support these queries if you so desire.
+-- p. Three additional queries that demonstrate the five additional business rules.  
+-- Feel free to create additional views to support these queries if you so desire.

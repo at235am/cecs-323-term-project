@@ -1,6 +1,4 @@
 
-
-
 INSERT INTO Employee(firstName, lastName, birthdate, hiredDate) VALUES 
 ('Lorde', 		'Willing', 			'2000-12-25', '2019-07-30'),
 ('Rip', 		'Harambe', 			'1999-05-27', '2018-05-28'), -- noone dare change this date
@@ -501,10 +499,10 @@ INSERT INTO MoraleBonus(empID, month, year) VALUES
 (43, 8, 1993);
 
 INSERT INTO Menu(menuType, priceModifierPercentage, startTime, endTime, dateCreated) VALUES
-('Lunch',                     10, '10:00:00', '16:59:59', '2018-03-29'), -- 10am to 4:59pm
-('Evening',                 0,     '17:00:00', '23:00:00', '2018-11-23'), -- 5pm to 11pm
-('Sunday Brunch Buffet',     50, '10:00:00', '23:00:00', '2018-08-09'), -- only sundays 10am to 11pm
-('Children',            20, '10:00:00', '23:00:00', '2018-02-18'); -- all day everyday so 10am to 11pm
+('Lunch',                   10, '10:00:00', '16:59:59', '2018-03-29'), -- 10am to 4:59pm
+('Evening',                 0,  '17:00:00', '23:00:00', '2018-11-23'), -- 5pm to 11pm
+('Sunday Brunch Buffet',    50, '10:00:00', '23:00:00', '2018-08-09'), -- only sundays 10am to 11pm
+('Children',            	20, '10:00:00', '23:00:00', '2018-02-18'); -- all day everyday so 10am to 11pm
 
 INSERT INTO MenuItem(menuItemName, spiciness, basePrice) VALUES
 ('Scallop Fries', 		'Mild', 		5.50), #appetizer #meatEntree
@@ -1632,9 +1630,9 @@ INSERT INTO OrderDetails(menuType, menuItemName, orderID, quantity) VALUES
 
 ('Children', 'Tacos', 	100, 22);
 
-
-
-
+INSERT INTO ShiftDetails(shiftType, startTime, endTime) VALUES 
+('Morning', '08:00:00', '15:59:59'), -- 8am to 3:59pm
+('Evening', '16:00:00', '24:00:00'); -- 4pm to 12am(midnight)
 
 INSERT INTO WorkShift(shiftType, dateOfShift, busyness) VALUES
 ('Morning', '2017-08-01', 'Low'),
@@ -17464,35 +17462,3 @@ Insert into EatInOrder(orderID, numGuest, stID) values
 (94,  2,     71 ),
 (96,   5 ,    72),
 (97,  3,      73);
-
- 
-
-
-
-
-
-SELECT * FROM Orders;
-SELECT * FROM EatInOrder;
--- SELECT * FROM SeatingTable;
--- SELECT * FROM WorkShift;
--- SELECT * FROM WorkSchedule;
--- SELECT * FROM Expertise;
--- SELECT * FROM Mentorship;
--- SELECT * FROM TriggerDebug;
-
-
-
-
-# SELECT * FROM SeatingTable;
-#SELECT * FROM WorkShift;
-#SELECT * FROM WorkSchedule;
-#SELECT * FROM Expertise;
-#SELECT * FROM Mentorship;
-
-
-
-
-
-
-
-
