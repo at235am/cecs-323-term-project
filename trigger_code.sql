@@ -44,7 +44,6 @@ BEGIN
 			SIGNAL SQLSTATE '45000' SET message_text = msg;
         END IF;
     END IF;
-    
 END $$
 
 CREATE TRIGGER INSERT_MenuMenuItem_price
@@ -97,7 +96,6 @@ BEGIN
 		SET Orders.total = 20.99
 		WHERE orderID = new.orderID;
     ELSE
-    
 		-- AFTER the new insert associating a MenuMenuItem with an Order
 		-- find the total for that specific Order based on the price of each MenuMenuItem
 		SELECT SUM(price * quantity)
@@ -123,7 +121,6 @@ BEGIN
 		SET Orders.total = newtotal
 		WHERE orderID = new.orderID;
     END IF;
-    
 END $$
 
 CREATE TRIGGER INSERT_WorkSchedule_employee_cannot_work_both_shifts_per_day
@@ -134,11 +131,6 @@ BEGIN
     DECLARE v_shiftType VARCHAR(50);
 	DECLARE v_rowcount INT;
     DECLARE msg varchar(255);
-    
-	SELECT shiftType
-    INTO v_shiftType
-    FROM WorkShift
-    WHERE shiftID = new.shiftID;
     
     SELECT dateOfShift
     INTO v_dateOfShift
@@ -151,7 +143,7 @@ BEGIN
     WHERE empID = new.empID AND dateOfShift = v_dateOfShift;
     
     IF v_rowcount = 1 THEN
-		SET msg = concat('Employee with empID=', cast(new.empID as char), ' is already scheduled on ', cast(v_dateOfShift as char), ' for the ', cast(v_shiftType as char), ' shift');
+		SET msg = concat('Employee with empID=', cast(new.empID as char), ' is already scheduled on ', cast(v_dateOfShift as char));
         SIGNAL SQLSTATE '45000' SET message_text = msg;
     END IF;
 END $$
@@ -187,7 +179,6 @@ BEGIN
     SET v_creditEarned = v_totalspentacrossallorders * 0.10;
     SET v_currentBalance = v_creditEarned - v_creditSpent;
     
-    
 	UPDATE MimingsMoney
 	SET creditEarned = v_creditEarned 
 	WHERE customerID = new.customerID;
@@ -195,7 +186,6 @@ BEGIN
 	UPDATE MimingsMoney
 	SET currentBalance = v_currentBalance
 	WHERE customerID = new.customerID;
-
 END;
 
 CREATE TRIGGER INSERT_Mentorship_triggers_INSERT_Expertise
