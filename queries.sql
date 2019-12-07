@@ -4,7 +4,9 @@
 -- please indicate which category the customer falls into for all of the categorizations.
 
 -- Private ONLY
-SELECT P.customerID, 'Private' as typeOfCustomer, P.cFirstName, P.cLastName, P.email, P.snailMailAddress, P.phone
+SELECT 
+P.customerID, 'Private' as typeOfCustomer, P.cFirstName, 
+P.cLastName, P.email, P.snailMailAddress, P.phone
 FROM 
 	(SELECT * FROM PrivateCustomer NATURAL JOIN Customer NATURAL JOIN ContactInfo) AS P
 	LEFT JOIN 
@@ -13,7 +15,9 @@ ON P.customerID = C.customerID
 WHERE C.customerID IS NULL
 UNION
 -- Corporate ONLY
-SELECT C.customerID, 'Corporate' as typeOfCustomer, C.cFirstName, C.cLastName, C.email, C.snailMailAddress, C.phone
+SELECT 
+C.customerID, 'Corporate' as typeOfCustomer, C.cFirstName, 
+C.cLastName, C.email, C.snailMailAddress, C.phone
 FROM 
 	(SELECT * FROM CorporateCustomer NATURAL JOIN Customer NATURAL JOIN ContactInfo) AS C
 	LEFT JOIN 
@@ -22,7 +26,9 @@ ON C.customerID = P.customerID
 WHERE P.customerID IS NULL
 UNION
 -- BOTH:
-SELECT DISTINCT customerID, 'BOTH' as typeOfCustomer, P.cFirstName, P.cLastName, P.email, P.snailMailAddress, P.phone
+SELECT DISTINCT 
+customerID, 'BOTH' as typeOfCustomer, P.cFirstName, 
+P.cLastName, P.email, P.snailMailAddress, P.phone
 FROM
 	(SELECT * FROM PrivateCustomer NATURAL JOIN Customer NATURAL JOIN ContactInfo) AS P
 	INNER JOIN
@@ -85,7 +91,9 @@ LIMIT 3;
 
 -- f. List all the menu items, the shift in which the menu item was ordered, 
 -- and the sous chef on duty at the time, when the sous chef was not an expert in that menu item.
-SELECT A.menuItemName, B.shiftType, B.dateOfShift, B.empID, B.lastName AS 'SousChef Last Name', B.firstName AS 'SousChef First Name'
+SELECT 
+A.menuItemName, B.shiftType, B.dateOfShift, 
+B.empID, B.lastName AS 'SousChef Last Name', B.firstName AS 'SousChef First Name'
 FROM
 (SELECT *
 FROM OrderDetails NATURAL JOIN Orders) AS A
@@ -141,7 +149,9 @@ LIMIT 5;
 
 -- l. Find the sous chef who is mentoring the most other sous chef.  
 -- List the menu items that the sous chef is passing along to the other sous chefs.
-SELECT empID, firstName, lastName, count(empID) AS '# of students taught', group_concat(DISTINCT menuItemName) AS 'Menu Items taught'
+SELECT 
+empID, firstName, lastName, count(empID) AS '# of students taught', 
+group_concat(DISTINCT menuItemName) AS 'Menu Items taught'
 FROM Employee INNER JOIN Mentorship
 ON empID = mentorID
 WHERE empID IN
@@ -193,7 +203,9 @@ FROM Employee NATURAL JOIN Dishwasher NATURAL JOIN DishBonus;
 
 -- Business Rule #2:
 -- Happy Hour Discount: Orders between 5pm-6pm get 50% off the total.
-SELECT A.orderID, A.orderTime, A.happyHourDiscount, B.withoutHHDiscount AS 'Total w/o HH discount', A.total AS 'Total WITH HH discount'
+SELECT 
+A.orderID, A.orderTime, A.happyHourDiscount, 
+B.withoutHHDiscount AS 'Total w/o HH discount', A.total AS 'Total WITH HH discount'
 FROM
 	(SELECT * FROM Orders) AS A
 	INNER JOIN
@@ -205,7 +217,6 @@ ON A.orderID = B.orderID;
 -- Business Rule #3:
 -- Wait Staff Morale Bonus: Customer service can be a draining and thankless job. 
 -- Every month we pick a waiter at random to get bonus based on 10% of the tips they made for the month.
-
 SELECT A.month, A.year, A.empID, A.firstName, A.lastName, B.tipsEarned, A.bonusAmount
 FROM
 	(SELECT * FROM Employee NATURAL JOIN MoraleBonus) AS A
