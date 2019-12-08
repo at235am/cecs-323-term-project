@@ -394,39 +394,46 @@ INSERT INTO CookingStation(empID, stationName, dateStationed) VALUE
 (23,'Vegetable','2018-05-12');
 
 INSERT INTO DishBonus(empID, dateWorked, dishesWashed) VALUES
-(31, '2018-02-16', 123),
-(31, '2018-02-17', 256),
-(31, '2018-02-18', 132),
-(32, '2018-02-17', 164),
-(32, '2018-02-18', 105),
-(32, '2018-02-19', 68),
-(33, '2018-02-01', 138),
-(33, '2018-02-23', 112),
-(33, '2019-06-16', 68),
-(33, '2018-11-23', 86),
-(33, '2017-08-19', 136),
-(34, '2018-02-23', 72),
-(34, '2018-02-08', 83),
+(31, '2017-08-03', 123),
+(31, '2017-08-09', 256),
+(31, '2017-08-12', 132),
+
+(32, '2017-10-21', 164),
+(32, '2017-10-22', 105),
+(32, '2017-11-01', 68),
+
+(33, '2017-10-20', 138),
+(33, '2017-10-25', 112),
+(33, '2017-11-01', 68),
+(33, '2017-11-05', 86),
+(33, '2017-11-07', 136),
+
+(34, '2017-09-09', 72),
+(34, '2017-09-10', 83),
 (34, '2017-09-14', 102),
-(35, '2018-02-01', 15),
-(35, '2018-02-12', 86),
-(35, '2018-06-01', 103),
-(35, '2018-07-12', 196),
-(36, '2016-02-01', 200),
-(36, '2018-03-01', 201),
-(36, '2018-04-01', 92),
-(36, '2018-09-01', 189),
-(37, '2017-02-02', 101),
-(37, '2017-03-03', 102),
-(37, '2018-04-11', 105),
-(37, '2018-05-16', 135),
-(37, '2019-06-03', 158),
-(37, '2019-07-08', 206),
-(37, '2019-04-26', 999),
-(38, '2019-05-18', 72),
-(38, '2017-11-22', 26),
-(38, '2018-12-16', 118),
-(38, '2018-08-09', 102);
+
+(35, '2017-12-26', 15),
+(35, '2017-12-30', 86),
+(35, '2018-01-01', 103),
+(35, '2018-01-07', 196),
+
+(36, '2018-03-23', 200),
+(36, '2018-03-24', 201),
+(36, '2018-03-25', 92),
+(36, '2018-04-02', 189),
+
+(37, '2018-02-13', 101),
+(37, '2018-02-14', 102),
+(37, '2018-02-15', 105),
+(37, '2018-02-21', 135),
+(37, '2018-02-23', 158),
+(37, '2018-03-03', 206),
+(37, '2018-03-04', 999),
+
+(38, '2018-03-31', 72),
+(38, '2018-04-01', 26),
+(38, '2018-04-03', 118),
+(38, '2018-04-07', 102);
 
 INSERT INTO Tip(empID, dateOfTip, timeOfTip, tipAmount) VALUES
 (39, '2018-05-01', '10:00:00', 6.01),
@@ -1367,7 +1374,6 @@ INSERT INTO OrderDetails(menuType, menuItemName, orderID, quantity) VALUES
 ('Lunch', 'Sweet & Sour Chicken', '21', 10),
 ('Lunch', 'Fried Rice', '3', 5),
 ('Lunch', 'Spring Roll', '17', 2),
-('Lunch', 'Dumplings', '22',  2),
 ('Lunch', 'Spring Roll', '12', 6),
 ('Lunch', 'Cucumber Sandwiches', '14', 9),
 ('Lunch', 'Chicken Soup', '13', 3),
@@ -1450,10 +1456,7 @@ INSERT INTO OrderDetails(menuType, menuItemName, orderID, quantity) VALUES
 ('Evening', 'Pad Thai', '36', 10),
 ('Evening', 'Steak Wrap', '30',  3),
 ('Evening', 'Steak Wrap', '38', 6),
-('Evening', 'Bacon Brussel Sprouts', '34',  6),
 ('Evening', 'Scallop Fries', '39', 4),
-('Evening', 'Pad Thai', '35', 2),
-('Evening', 'Steak Wrap', '30', 1),
 ('Sunday Brunch Buffet', 'Spaghetti Bolognese', '69', 1),
 ('Sunday Brunch Buffet', 'Salmon Curry', '60', 1),
 ('Sunday Brunch Buffet', 'Cucumber Sandwiches', '66', 3),
@@ -1489,7 +1492,6 @@ INSERT INTO OrderDetails(menuType, menuItemName, orderID, quantity) VALUES
 ('Sunday Brunch Buffet', 'Spaghetti Bolognese', '61',  2),
 ('Sunday Brunch Buffet', 'Tacos', '67', 3),
 ('Sunday Brunch Buffet', 'Chicken Wings', '66', 9),
-('Sunday Brunch Buffet', 'Sweet & Sour Chicken', '52',  5),
 ('Sunday Brunch Buffet', 'Sweet & Sour Chicken', '59', 1),
 ('Sunday Brunch Buffet', 'Pad Thai', '68',  9),
 ('Sunday Brunch Buffet', 'Chicken Wings', '63', 6),
@@ -1562,7 +1564,6 @@ INSERT INTO OrderDetails(menuType, menuItemName, orderID, quantity) VALUES
 ('Children', 'Pad Thai', '87', 8),
 ('Children', 'Ramen', '82', 2),
 ('Children', 'Ramen', '85', 8),
-('Children', 'Ramen', '73',  5),
 ('Children', 'Scallop Fries', '73', 5),
 ('Children', 'Ramen', '87', 10),
 ('Children', 'Scallop Fries', '74', 4),
@@ -1576,14 +1577,12 @@ INSERT INTO OrderDetails(menuType, menuItemName, orderID, quantity) VALUES
 ('Children', 'Fried Rice', '91', 9),
 ('Children', 'Bacon-wrapped pig wings', '89', 10),
 ('Children', 'Pork Shoulder Steaks', '97', 1),
-('Children', 'Sweet and sour pork', '70', 3),
 ('Children', 'Spring roll', '79', 4),
 ('Children', 'Tacos', '94', 7),
 ('Children', 'Pad Thai', '92', 5),
 ('Children', 'Sweet and sour pork', '77',  5),
 ('Children', 'Pork Shoulder Steaks', '79', 9),
 ('Children', 'Pad Thai', '89',  7);
-
 
 INSERT INTO ShiftType(shiftType, startTime, endTime) VALUES 
 ('Morning', '08:00:00', '15:59:59'), -- 8am to 3:59pm

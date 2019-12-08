@@ -195,16 +195,23 @@ ORDER BY menuType, menuItemName;
 -- p. Three additional queries that demonstrate the five additional business rules.  
 -- Feel free to create additional views to support these queries if you so desire.
 
--- Business Rule #1:
--- DishwashingStaff gets paid an extra $1 per washed plate AFTER 100 washed plates; 
--- washed plate count resets each shift.
-SELECT empID, lastName, firstName, dateWorked, dishesWashed, extraDishMoney
-FROM Employee NATURAL JOIN Dishwasher NATURAL JOIN DishBonus;
+-- 1. For Business Rule #1:
+-- List the top 10 Dishwashers who washed the most dishes in one shift, how much they earned extra,
+-- and what shift it was.
+SELECT A.empID, A.lastName, A.firstName, A.dateWorked, B.shiftType, A.dishesWashed, A.extraDishMoney
+FROM
+	(SELECT *-- empID, lastName, firstName, dateWorked, dishesWashed, extraDishMoney
+	FROM Employee NATURAL JOIN Dishwasher NATURAL JOIN DishBonus) AS A
+	INNER JOIN
+	(SELECT * FROM WorkSchedule NATURAL JOIN WorkShift) AS B
+ON A.empID = B.empID AND A.dateWorked = B.dateOfShift
+ORDER BY A.extraDishMoney DESC
+LIMIT 10;
 
--- Business Rule #2:
--- Happy Hour Discount: Orders between 5pm-6pm get 50% off the total.
+-- 2. For Business Rule #2:
+-- List all the orders and their totals before AND after the happy hour discount is applied (if applicable).
 SELECT 
-A.orderID, A.orderTime, A.happyHourDiscount, 
+A.orderID, dayname(A.orderDate) AS 'Day of Order', A.orderDate, A.orderTime, A.happyHourDiscount, 
 B.withoutHHDiscount AS 'Total w/o HH discount', A.total AS 'Total WITH HH discount'
 FROM
 	(SELECT * FROM Orders) AS A
@@ -214,32 +221,9 @@ FROM
 	GROUP BY orderID) AS B
 ON A.orderID = B.orderID;
 
--- Business Rule #3:
--- Wait Staff Morale Bonus: Customer service can be a draining and thankless job. 
--- Every month we pick a waiter at random to get bonus based on 10% of the tips they made for the month.
-SELECT A.month, A.year, A.empID, A.firstName, A.lastName, B.tipsEarned, A.bonusAmount
-FROM
-	(SELECT * FROM Employee NATURAL JOIN MoraleBonus) AS A
-	LEFT JOIN
-	(SELECT *, month(dateOfTip) AS monthB, year(dateOfTip) AS yearB, sum(tipAmount) AS tipsEarned
-	FROM Tip
-	GROUP BY empID, month(dateOfTip), year(dateOfTip)) AS B
-ON A.empID = B.empID AND A.month = month(B.dateOfTip) AND A.year = year(B.dateOfTip)
-ORDER BY A.year, A.month;
-
-
--- Business Rule #4:
--- Employee of the month: tracks the best performing employee for each month.
+-- 3. For Business Rule #4:
+-- List the Employee of the month for each month throughout the history of the restaurant. 
+-- Make sure to order by it by month and year from most the very first employee of the month to the latest.
 SELECT month, year, empID, lastName, firstName, notableAchievement
 FROM EmployeeOfTheMonth NATURAL JOIN Employee
 ORDER BY year, month;
-
--- Business Rule #5:
--- An employee may not work both the morning and evening shifts of the same date. 
--- This is against state/federal law because an Employee working both the morning and 
--- evening shifts of the same day would be working 16 hours per day.
--- (this one is implemented using triggers, but you can see that there is no employee that works 
--- boththe evening and morning shifts for a particular date)
-SELECT empID, lastName, firstName, dateOfShift, shiftType 
-FROM Employee NATURAL JOIN WorkSchedule NATURAL JOIN WorkShift
-ORDER BY empID, dateOfShift, shiftType;
