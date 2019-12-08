@@ -48,15 +48,6 @@ BEGIN
 		SET msg = concat('Time Out Of Range@ [', cast(new.menuType as char), ', ',  cast(new.menuItemName as char), ', ', cast(new.orderID as char),']: orderTime is out of the menuType\'s range');
         SIGNAL SQLSTATE '45000' SET message_text = msg;
     END IF;
-    
---     IF new.menuType = 'Sunday Brunch Buffet' THEN
--- 		-- if the day of the week of the orderDate is Sunday (1)
--- 		IF NOT dayofweek(v_orderDate) = 1 THEN
--- 			SET msg = concat('Trouble @ [', cast(new.menuType as char), ', ',  cast(new.menuItemName as char), ', ', cast(new.orderID as char), ']: the orderDate is not a Sunday');
--- 			SIGNAL SQLSTATE '45000' SET message_text = msg;
---         END IF;
---     END IF;
-
 END $$
 
 CREATE TRIGGER INSERT_MenuMenuItem_price
