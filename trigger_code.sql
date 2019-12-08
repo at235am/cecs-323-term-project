@@ -31,19 +31,32 @@ BEGIN
     FROM Menu
     WHERE menuType = new.menuType;
     
+    -- trying to order off another menu that is NOT the Sunday Menu when it IS Sunday
+	IF dayname(v_orderDate) = 'Sunday' AND (NOT new.menuType = 'Sunday Brunch Buffet') THEN
+		-- SET msg = concat('The orderDate is a Sunday: you cannot order MenuItems that are not on the Sunday Brunch Buffet Menu' );
+		SET msg = concat('Its Sunday: @[', cast(new.menuType as char), ', ', cast(new.menuItemName as char), ', ', cast(new.orderID as char), ']');
+		SIGNAL SQLSTATE '45000' SET message_text = msg;
+	-- trying to order off the Sunday menu when it is NOT Sunday
+	ELSEIF (NOT dayname(v_orderDate) = 'Sunday') AND new.menuType = 'Sunday Brunch Buffet' THEN
+		-- SET msg = concat('The orderDate is NOT a Sunday: you cannot order MenuItems that are on the Sunday Brunch Buffet Menu' );
+		SET msg = concat('Not Sunday @[', cast(new.menuType as char), ', ', cast(new.menuItemName as char), ', ', cast(new.orderID as char), ']');
+		SIGNAL SQLSTATE '45000' SET message_text = msg;
+	END IF;
+    
     -- if the orderTime is out of the menuType's range
 	IF v_ordertime < v_menustarttime OR v_ordertime > v_menuendtime THEN 
-		SET msg = concat('Trouble @ [', cast(new.menuType as char), ', ',  cast(new.menuItemName as char), ', ', cast(new.orderID as char),']: orderTime is out of the menuType\'s range');
+		SET msg = concat('Time Out Of Range@ [', cast(new.menuType as char), ', ',  cast(new.menuItemName as char), ', ', cast(new.orderID as char),']: orderTime is out of the menuType\'s range');
         SIGNAL SQLSTATE '45000' SET message_text = msg;
     END IF;
     
-    IF new.menuType = 'Sunday Brunch Buffet' THEN
-		-- if the day of the week of the orderDate is Sunday (1)
-		IF NOT dayofweek(v_orderDate) = 1 THEN
-			SET msg = concat('Trouble @ [', cast(new.menuType as char), ', ',  cast(new.menuItemName as char), ', ', cast(new.orderID as char), ']: the orderDate is not a Sunday');
-			SIGNAL SQLSTATE '45000' SET message_text = msg;
-        END IF;
-    END IF;
+--     IF new.menuType = 'Sunday Brunch Buffet' THEN
+-- 		-- if the day of the week of the orderDate is Sunday (1)
+-- 		IF NOT dayofweek(v_orderDate) = 1 THEN
+-- 			SET msg = concat('Trouble @ [', cast(new.menuType as char), ', ',  cast(new.menuItemName as char), ', ', cast(new.orderID as char), ']: the orderDate is not a Sunday');
+-- 			SIGNAL SQLSTATE '45000' SET message_text = msg;
+--         END IF;
+--     END IF;
+
 END $$
 
 CREATE TRIGGER INSERT_MenuMenuItem_price
@@ -85,13 +98,14 @@ BEGIN
 	DECLARE newtotal DECIMAL(6,2);
     DECLARE v_happyhourdiscount BOOLEAN;
 	DECLARE v_orderDate DATE;
+    DECLARE msg varchar(255);
     
     SELECT orderDate
     INTO v_orderDate
     FROM Orders
     WHERE orderID = new.orderID;
     
-    IF dayofweek(v_orderDate) = 1 THEN
+    IF dayname(v_orderDate) = 'Sunday' THEN
         UPDATE Orders
 		SET Orders.total = 20.99
 		WHERE orderID = new.orderID;
@@ -152,7 +166,7 @@ CREATE TRIGGER INSERT_happyHourDiscount
 BEFORE INSERT ON
 Orders FOR EACH ROW
 BEGIN
-	if new.ordertime>='17:00:00' and new.ordertime <='18:00:00' then
+	if new.ordertime>='17:00:00' and new.ordertime <='18:00:00' and NOT dayname(new.orderdate) = 'Sunday' then
 		set new.happyHourDiscount = true;
 	end if;
 END $$
